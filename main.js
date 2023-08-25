@@ -1,16 +1,12 @@
-// - egy már korábban megadott betű újra beírható és elküldhető majd elhelyezi a megadott helyre ******************
-// -- egy új tömbbe helyeznénk azokat a karaktereket amit elküldünk input mezőn keresztül és az alapján ellenőrizze hogy ami még nincs benne csak azt engedje beírni illetve üzenjen hogy ez a karakter már volt (bár jobb lenne ha nem is tudná használni pl gomb esetén disabled lenne)
-
 // - nyeremény kiírásának mikéntje
-// - bevitelnél csak egy karaktert engedjen meg vagy gombokkal megoldva?
-// - passz? csőd bevezetése
+// - később a beviteli mező gombokra váltása?
+// - passz? (egyjátékos mód esetén nem kell) csőd bevezetése?
 // - kódsor szebbé/átláthatóbbá/jobb teljesítményűvé tétele
 // - console.log()-ok törlése, ha már nem szükséges ellenőrzéshez
 
 const megfejtendo = ['alma', 'barack', 'körte', 'dió', 'cseresznye'];
 // szamok tömbbe lehetnének a különleges karakterek is ****************
 const szamok = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-const elhasznaltKarakterek = [];
 let kiirtertek = 0;
 let penz = 0;
 let szo = '';
@@ -63,8 +59,6 @@ document.getElementById('spin').addEventListener('click', (e) => {
     kiporgetettErtek.innerHTML = 'A nyerhető érték: ' + kiirtertek;
     // inputba írt szöveg kisbetűssé alakítása
     let tipp = document.getElementById('tippszo').value.toLowerCase();
-    // elhasznált karakterek/betűk tömbje ******************
-    elhasznaltKarakterek.push(tipp);
     let szoIndex = '';
 
     // hibaüzenetek
@@ -74,42 +68,41 @@ document.getElementById('spin').addEventListener('click', (e) => {
         errors.push('<article class="col p-2">Pontosan egy karaktert írjon be a mezőbe!</article>');
     }
 
-    // számok? különleges karakterek?*************
+    // számok? különleges karakterek?************* vagy fordítva abc lenne felsorolva
     szamok.forEach(szam => {
         if (tipp === szam) {
             errors.push('<article class="col p-2">Egy betűt írjon be a mezőbe!</article>');
         }
     })
 
-    // egy elhasznált betű/karakter hibaüzenete ***************
-    /*
-    elhasznaltKarakterek.forEach( item => {
-        if(tipp === item) {
-            errors.push('<article class="col p-2">Ezt a betűt már egyszer elhasználta!</article>');
-        }
-        else {
-            szo.split('').forEach((item, index) => {
-                if (tipp === item) {
-                    szoIndex = index;
-                    // feltétel hogy a jó indexre tegye az eltalált betűt
-                    let spans = papir.getElementsByTagName("span");
-                    // találat számára létrehozott változó
-                    let szorzo = 0;
-                    for (i = 0; i < spans.length; i++) {
-                        if (i === szoIndex) {
-                            spans[i].innerText += item;
-                            // a találatok száma alapján kiszámolja a szorzó számát
-                            szorzo += 1;
-                            console.log(item, i);
-                        }
+    szo.split('').forEach((item, index) => {
+        if (tipp === item) {
+            szoIndex = index;
+            // feltétel hogy a jó indexre tegye az eltalált betűt
+            let spans = papir.getElementsByTagName("span");
+            // találat számára létrehozott változó
+            let szorzo = 0;
+            for (i = 0; i < spans.length; i++) {
+                // a span idexe és a betű indexe a megfejtendő szóban egyezzen
+                if (i === szoIndex) {
+                    // ha a span üres ahova szeretnénk hogy kerüljön a betű akkor helyezze el benne
+                    if (spans[i].innerText === '') {
+                        // += nem is kell? ********************
+                        spans[i].innerText += item;
+                        // a találatok száma alapján kiszámolja a szorzó számát
+                        szorzo += 1;
+                        console.log(item, i);
                     }
-                    // annyit ad hozzá értéknek amennyit kipörget azt megszorozva a talált betűk szorzójával
-                    penz += szorzo * kiirtertek;
+                    // máskülönben írjon hibaüzenetet és ne történjen más művelet
+                    else {
+                        errors.push('<article class="col p-2">Ezt a betűt már egyszer elhasználta!</article>');
+                    }
                 }
-            })
+            }
+            // annyit ad hozzá értéknek amennyit kipörget azt megszorozva a talált betűk szorzójával
+            penz += szorzo * kiirtertek;
         }
     })
-    */
 
     if (errors.length > 0) {
         // bootstrap alertbe**************
@@ -121,25 +114,6 @@ document.getElementById('spin').addEventListener('click', (e) => {
         document.getElementById('hiba').innerHTML = "";
     }
 
-    szo.split('').forEach((item, index) => {
-        if (tipp === item) {
-            szoIndex = index;
-            // feltétel hogy a jó indexre tegye az eltalált betűt
-            let spans = papir.getElementsByTagName("span");
-            // találat számára létrehozott változó
-            let szorzo = 0;
-            for (i = 0; i < spans.length; i++) {
-                if (i === szoIndex) {
-                    spans[i].innerText += item;
-                    // a találatok száma alapján kiszámolja a szorzó számát
-                    szorzo += 1;
-                    console.log(item, i);
-                }
-            }
-            // annyit ad hozzá értéknek amennyit kipörget azt megszorozva a talált betűk szorzójával
-            penz += szorzo * kiirtertek;
-        }
-    })
 
     // kiürüljön az input mező pörgetésenként
     document.getElementById('tippszo').value = '';
