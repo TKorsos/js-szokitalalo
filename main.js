@@ -49,7 +49,7 @@ document.getElementById('start').addEventListener('click', (e) => {
     spin.style.display = "block";
     // megjelenítésnél létrehozza a helyét ahova kerülnek az eltalált karakterek
     for (i = 0; i < szo.length; i++) {
-        papir.innerHTML += `<span class="border p-3" id="${i}"></span>`;
+        papir.innerHTML += `<span class="border p-3" id="_${i}"></span>`;
     }
 })
 
@@ -86,7 +86,7 @@ document.getElementById('spin').addEventListener('click', (e) => {
                 // a span idexe és a betű indexe a megfejtendő szóban egyezzen
                 if (i === szoIndex) {
                     // ha a span üres ahova szeretnénk hogy kerüljön a betű akkor helyezze el benne
-                    if (spans[i].innerText === '') {
+                    if (spans[i].innerText.trim().length === 0) {
                         // += nem is kell? ********************
                         spans[i].innerText += item;
                         // a találatok száma alapján kiszámolja a szorzó számát
